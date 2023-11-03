@@ -1,5 +1,5 @@
 import { configureStore, type Middleware } from '@reduxjs/toolkit'
-import usersReducer, {rollBackUser} from './Users/slice'
+import usersReducer, { rollBackUser } from './Users/slice'
 import { toast } from 'sonner'
 const userData = {
   name: 'nombre',
@@ -22,6 +22,7 @@ const syncWithDatabaseMiddleware: Middleware =
     if (type === 'users/deleteUsersById') {
       const UserIdToRemove = payload
       const userToRemove = prevState.users.find(user => user.id === UserIdToRemove)
+      console.log('🚀 ~ file: index.ts:25 ~ userToRemove:', userToRemove)
       fetch(`https://jsonplaceholder.typicode.com/users/${UserIdToRemove}`, {
         method: 'DELETE'
       })
@@ -29,11 +30,15 @@ const syncWithDatabaseMiddleware: Middleware =
           if (response.ok) {
             toast.success('Usuario Eliminado')
           }
+ 
           throw new Error('Error al eliminar el usuario')
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log('🚀 ~ file: index.ts:36 ~ err:', err)
+
           toast.error(`Error deleting user${UserIdToRemove}`)
           if (userToRemove) store.dispatch(rollBackUser(userToRemove))
+          console.log('🚀 ~ file: index.ts:38 ~ userToRemove:', userToRemove)
           console.log('error')
         })
     }

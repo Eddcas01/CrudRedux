@@ -47,7 +47,7 @@ export const usersSlice = createSlice({
     addNewUser: (state, action: PayloadAction<userId>) => {
       const id = crypto.randomUUID()
       console.log('🚀 ~ file: slice.ts:56 ~ action:', action)
-      return [...state, { id, ...action.payload }]
+      state.push({ id, ...action.payload })
     },
     deleteUsersById: (state, action: PayloadAction<userId>) => {
       const id = action.payload
@@ -58,7 +58,8 @@ export const usersSlice = createSlice({
         (user) => user.id === action.payload.id
       )
       if (!IsUserAlreadyDefined) {
-        return [...state, action.payload]
+        state.push({action.payload })
+
       }
     }
   }
