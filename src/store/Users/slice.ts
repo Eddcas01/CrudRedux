@@ -5,11 +5,9 @@ export interface User {
   name: string
   email: string
   github: string
-
 }
 
 const DEFAULT_STATE = [
-
   {
     id: 'eddcas01',
     name: 'Edgar Casasola',
@@ -32,9 +30,7 @@ const DEFAULT_STATE = [
 ]
 
 export interface UserWithId extends User {
-
   id: userId
-
 }
 
 const initialState: UserWithId[] = (() => {
@@ -45,11 +41,9 @@ const initialState: UserWithId[] = (() => {
 })()
 
 export const usersSlice = createSlice({
-
   name: 'users',
   initialState,
   reducers: {
-
     addNewUser: (state, action: PayloadAction<userId>) => {
       const id = crypto.randomUUID()
       console.log('🚀 ~ file: slice.ts:56 ~ action:', action)
@@ -58,14 +52,20 @@ export const usersSlice = createSlice({
     deleteUsersById: (state, action: PayloadAction<userId>) => {
       const id = action.payload
       return state.filter((user) => user.id !== id)
+    },
+    rollBackUser: (state, action: PayloadAction<UserWithId>) => {
+      const IsUserAlreadyDefined = state.some(
+        (user) => user.id === action.payload.id
+      )
+      if (!IsUserAlreadyDefined) {
+        return [...state, action.payload]
+      }
     }
-
   }
-
 })
 // reducer
 export default usersSlice.reducer
 
 // actions
 
-export const { addNewUser, deleteUsersById } = usersSlice.actions
+export const { addNewUser, deleteUsersById, rollBackUser } = usersSlice.actions
